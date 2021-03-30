@@ -304,7 +304,7 @@ func generateDataset(dest []uint32, epoch uint64, cache []uint32) {
 				if swapped {
 					swap(item)
 				}
-				copy(dataset[index*hashBytes:], item)
+				copy(dataset[uint64(index)*hashBytes:], item)
 
 				if status := atomic.AddUint64(&progress, 1); status%percent == 0 {
 					fmt.Printf("Generating DAG in progress: %d%%, elapsed: %s\n", uint64(status*100)/(size/hashBytes), common.PrettyDuration(time.Since(start)).String())
