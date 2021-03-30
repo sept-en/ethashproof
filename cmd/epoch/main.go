@@ -22,13 +22,16 @@ func getHomeDir() string {
 func main() {
 	for i := 0; i < 512; i++ {
 		os.RemoveAll(filepath.Join(getHomeDir(), ".ethash"))
+		fmt.Printf("Calculating merkle root for the epoch %d\n", i)
 		root, err := ethashproof.CalculateDatasetMerkleRoot(uint64(i), false)
 		if err != nil {
 			fmt.Printf("Calculating dataset merkle root failed: %s\n", err)
 			return
 		}
+		os.Stdout.Write([]byte(root.Hex()))
+		fmt.Println()
 		err = ioutil.WriteFile(
-			fmt.Sprintf("%d.txt", i),
+			fmt.Sprintf("dag_roots/%d.txt", i),
 			[]byte(root.Hex()),
 			0644,
 		)
