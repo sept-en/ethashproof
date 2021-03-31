@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
+	"io/ioutil"
 	"os"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -60,6 +61,7 @@ func main() {
 			return
 		}
 	}
+	fmt.Printf("Cache is loaded.")
 
 	indices := ethash.Instance.GetVerificationIndices(
 		blockno,
@@ -99,4 +101,16 @@ func main() {
 	fmt.Printf("Json output:\n\n")
 	outputJson, _ := json.Marshal(output)
 	fmt.Printf("%s\n", outputJson)
+
+	filePath := fmt.Sprintf("proofs_for_blocks/proof_block_%d.json", blockno)
+	err = ioutil.WriteFile(
+		filePath,
+		outputJson,
+		0644,
+	)
+	if err != nil {
+		fmt.Printf("Write merkle root to file: %s\n", err)
+		return
+	}
+	fmt.Printf("Successfully saved proof block into file: %s", filePath)
 }
